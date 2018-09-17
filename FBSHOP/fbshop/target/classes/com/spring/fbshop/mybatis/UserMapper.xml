@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+	<insert id="insertBefore" parameterType="userDto">
+		INSERT INTO users_tb(mem_num,mem_flag) 
+		VALUES(MEM_NUM_SEQ.NEXTVAL, 1)
+	</insert>
+	<insert id="insertUser" parameterType="userDto">
+		INSERT INTO TB_USER(mem_num,id,pwd,name,phone,email,addr,regdate,point) 
+		VALUES(
+				(
+					SELECT MAX(mem_num) FROM users_tb
+				), #{id}, #{pwd}, #{name}, #{phone}, #{email}, #{addr},SYSDATE,1000)
+	</insert>
+	
+	<select id="test" resultType="String">
+		SELECT NOW()
+	</select>
+	
+	<select id="idCheck" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) FROM TB_USER WHERE U_ID = #{uId}
+	</select>
+	
+	<select id="findId" parameterType="userDto" resultType="String">
+		SELECT id FROM users WHERE name=#{name} AND email=#{email}
+	</select>
+	<select id="findPwd" parameterType="userDto" resultType="String">
+		SELECT pwd FROM users WHERE id=#{id} AND phone=#{phone}
+	</select>
+	<select id="overLab" parameterType="String" resultType="String">
+		SELECT id FROM users WHERE id=#{id}
+	</select>
+	<select id="isValid" parameterType="userDto" resultType="userDto">
+		SELECT id,pwd 
+		FROM users
+		WHERE id=#{id} AND pwd=#{pwd}
+	</select>
+	<select id="getData" parameterType="String" resultType="userDto">
+		SELECT mem_num,id,pwd,name,email,phone,addr,regdate
+		FROM users
+		WHERE id=#{id}
+		
+	</select>
+	<delete id="delete" parameterType="int">
+ 		DELETE FROM users
+ 		WHERE mem_num=#{num}
+	</delete>
+	
+	<update id="update" parameterType="userDto">
+		UPDATE users
+		SET pwd=#{pwd}, phone=#{phone}, email=#{email}, addr=#{addr}
+		WHERE id=#{id}
+	</update>	 
+</mapper>
+
+
+
+
+
+
+
+
